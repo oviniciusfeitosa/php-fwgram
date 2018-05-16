@@ -15,3 +15,13 @@ if you are using any other network service with apache or nginx you may use like
 ```
 docker run --rm -it --link web_service_container wernight/ngrok ngrok http web_service_container:80
 ```
+
+## Tecnologies
+
+- PHP 7+
+- Docker
+- Ngrok
+
+## References
+- https://github.com/wernight/docker-ngrok
+- https://www.sitepoint.com/conquering-instagram-with-php-and-the-instagram-api

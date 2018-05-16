@@ -1,4 +1,4 @@
-# fwgram
+# php-fwgram
 
 ### About
 

@@ -1,0 +1,10 @@
+{
+    "name": "vinnyfs89/php-fwgram",
+    "authors": [
+        {
+            "name": "vinnyfs89",
+            "email": "viniciusfesil@gmail.com"
+        }
+    ],
+    "require": {}
+}

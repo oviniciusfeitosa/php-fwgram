@@ -1,6 +1,9 @@
 # php-fwgram
 
-### About
+## Goals
+- [ ] Generate instagram Following list
+- [ ] Follow friend or list of Friends
+- [ ] Unfollow Massively
 
 ### Steps
 
@@ -26,7 +29,6 @@ docker run --rm -it --link web_service_container wernight/ngrok ngrok http web_s
 ```
 
 ## Tecnologies
-
 - PHP 7+
 - Docker
 - Ngrok

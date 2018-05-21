@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/vinnyfs89/php-fwgram.svg?branch=master)](https://travis-ci.com/vinnyfs89/php-fwgram)
+
 # php-fwgram
 
 ## Goals

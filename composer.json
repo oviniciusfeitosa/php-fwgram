@@ -6,13 +6,11 @@
             "email": "viniciusfesil@gmail.com"
         }
     ],
+    "require-dev": {
+        "vinnyfs89/x-dump": "dev-master"
+    },
     "require": {
-        "slim/slim": "^3.10",
-        "slim/twig-view": "^2.0",
-        "slim/flash": "^0.1.0",
-        "twig/twig": "^2.4",
-        "monolog/monolog": "^1.13",
-        "guzzlehttp/guzzle": "5.3.2"
+        "mgp25/instagram-php": "^4.1"
     },
     "autoload": {
         "psr-4": {

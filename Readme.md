@@ -20,7 +20,7 @@ docker run --rm -it wernight/ngrok ngrok http localhost:9999
 ```
 
 ```
-php -S 0.0.0.0:9999 -t public public/index.php
+php -S 0.0.0.0:9999 -t public
 ```
 
 if you are using any other network service with apache or nginx you may use like this:

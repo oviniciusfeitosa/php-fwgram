@@ -7,6 +7,7 @@
 - [x] Generate instagram Followers list(string, json)
 - [ ] Follow friend or list of Friends
 - [ ] Unfollow Massively
+- [ ] Add Tests
 
 ### Steps
 

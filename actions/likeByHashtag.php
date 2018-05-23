@@ -4,25 +4,27 @@ try {
 
     require __DIR__ . '/../config.php';
 
-    $hashtagsString = getenv('HASHTAG');
+    $hashtagsConcatened = getenv('HASHTAG');
 
-    if (is_null($hashtagsString) || empty($hashtagsString)) {
+    if (is_null($hashtagsConcatened) || empty($hashtagsConcatened)) {
         throw new Exception("You need to define `HASHTAG` in .env file");
     }
 
-    $hashTags = explode('|', $hashtagsString);
-    print "\n=== [ Like By Hashtag [{$username}] - Start! ] ===\n";
+    $hashTagsArray = explode('|', $hashtagsConcatened);
+    $hashTags = "#" . implode(' #', $hashTagsArray);
+
+    print "\n=== [ Like By Hashtag [user: {$username} | Hashtags: {$hashTags}] - Start! ] ===\n";
 
     $maximumLikes = (int) getenv('MAXIMUM_LIKES');
     if (is_null($maximumLikes) || empty($maximumLikes) || $maximumLikes < 1) {
         $maximumLikes = 90;
     }
-    foreach ($hashTags as $hashTag) {
+    $likeCount = 0;
+    foreach ($hashTagsArray as $hashTag) {
 
         $rankToken = \InstagramAPI\Signatures::generateUUID();
 
         $maxId = null;
-        $likeCount = 0;
         print "\n=== [ Hashtag: #{$hashTag} ] ===\n";
         do {
             $response = $instagramAPI->hashtag->getFeed($hashTag, $rankToken, $maxId);
@@ -68,11 +70,15 @@ try {
             sleep($sleepingTimeNextPage);
 
         } while ($maxId !== null);
+
+        if( $likeCount == $maximumLikes) {
+            break;
+        }
     }
 
     $instagramAPI->logout();
 
-    print "\n=== [ {$likeCount}/{$maximumLikes} Likes - Complete! ] ===\n";
+    print "\n=== [ {$likeCount}/{$maximumLikes} Likes for Hashtags: {$hashTags} - Complete! ] ===\n";
 
 } catch (\Exception $e) {
     echo "Something went wrong: {$e->getMessage()}\n";

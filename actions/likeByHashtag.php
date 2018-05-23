@@ -72,7 +72,7 @@ try {
             }
 
             if ($hashTaglikeCounter == $maximumLikesPerHashtag) {
-                echo "Maximum likes reached for #{$hashTag} [ {$maximumLikes} / {$maximumLikesPerHashtag} ]\n";
+                echo "Maximum likes reached for #{$hashTag} [ {$hashTaglikeCounter} / {$maximumLikesPerHashtag} ]\n";
                 break;
             }
 

@@ -10,9 +10,14 @@ try {
         throw new Exception("You need to define `USERNAME_SEARCHED` in .env file");
     }
 
+    $backupDataFolder = getenv('BACKUP_DATA_FOLDER');
+    if(is_null($backupDataFolder) || empty($backupDataFolder)) {
+        throw new Exception("You need to define `BACKUP_DATA_FOLDER` in .env file");
+    }
+
     $info = $instagramAPI->people->getInfoByName($userNameSearched);
-    file_put_contents("data/{$userNameSearched}_infos.json", json_encode($info));
-    file_put_contents("data/{$userNameSearched}_infos.txt", print_r($info, true));
+    file_put_contents("{$backupDataFolder}/{$userNameSearched}_infos.json", json_encode($info));
+    file_put_contents("{$backupDataFolder}/{$userNameSearched}_infos.txt", print_r($info, true));
 
     $following = [
         'users' => [],
@@ -48,8 +53,8 @@ try {
         $maxId = $following['nextMaxId'];
     } while ($maxId !== null);
 
-    file_put_contents("data/{$userNameSearched}_following.json", json_encode($following));
-    file_put_contents("data/{$userNameSearched}_following.txt", print_r($following, true));
+    file_put_contents("{$backupDataFolder}/{$userNameSearched}_following.json", json_encode($following));
+    file_put_contents("{$backupDataFolder}/{$userNameSearched}_following.txt", print_r($following, true));
 
     $instagramAPI->logout();
 

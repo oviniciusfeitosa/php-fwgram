@@ -3,9 +3,12 @@
 # php-fwgram
 
 ## Goals
-- [x] Generate instagram Following list(string, json)
-- [x] Generate instagram Followers list(string, json)
-- [ ] Follow friend or list of Friends
+- [x] Backup instagram Following list(string, json)
+- [x] Backup instagram Followers list(string, json)
+- [ ] Like by Hashtag 
+- [ ] Follow friend 
+- [ ] Follow list of Friends
+- [ ] Follow by Hashtag
 - [ ] Unfollow Massively
 - [ ] Add Tests
 
@@ -37,12 +40,16 @@ DB_DATABASE="fwgram"
 
 Execute the command bellow.
 ```
-php getFollowing.php
+php backupFollowing.php
 ```
 
-- User Follower
+### Store User Followers
+
+- You need to set ```USERNAME_SEARCHED="xxxx"``` in your ```.env``` file.
+
+Execute the command bellow.
 ```
-php getFollowers.php
+php backupFollowers.php
 ```
 
 ## Tecnologies

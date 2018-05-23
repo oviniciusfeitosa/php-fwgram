@@ -15,12 +15,19 @@ try {
 
     print "\n=== [ Like By Hashtag [user: {$username} | Hashtags: {$hashTags}] - Start! ] ===\n";
 
-    $maximumLikes = (int) getenv('MAXIMUM_LIKES');
+    $maximumLikes = (int)getenv('MAXIMUM_LIKES');
     if (is_null($maximumLikes) || empty($maximumLikes) || $maximumLikes < 1) {
-        $maximumLikes = 90;
+        throw new Exception("You need to define `MAXIMUM_LIKES` in .env file");
     }
+
+    $maximumLikesPerHashtag = (int)getenv('MAXIMUM_LIKES_PER_HASHTAG');
+    if (is_null($maximumLikesPerHashtag) || empty($maximumLikesPerHashtag) || $maximumLikesPerHashtag < 1) {
+        throw new Exception("You need to define `MAXIMUM_LIKES_PER_HASHTAG` in .env file");
+    }
+
     $likeCount = 0;
     foreach ($hashTagsArray as $hashTag) {
+        $hashTaglikeCounter = 0;
 
         $rankToken = \InstagramAPI\Signatures::generateUUID();
 
@@ -28,7 +35,7 @@ try {
         print "\n=== [ Hashtag: #{$hashTag} ] ===\n";
         do {
             $response = $instagramAPI->hashtag->getFeed($hashTag, $rankToken, $maxId);
-            if($response->isItems()) {
+            if ($response->isItems()) {
                 $items = $response->getItems();
             } else {
                 $items = $response->getRankedItems();
@@ -47,19 +54,29 @@ try {
                 $instagramAPI->media->like($itemId);
 //                $instagramAPI->people->get($item->getUser()->getPk());
 
+                $hashTaglikeCounter++;
                 $likeCount++;
                 echo "Like number: [ {$likeCount} ]\n";
 
                 $sleepingTime = rand(1, 2);
                 echo "Sleeping for {$sleepingTime}s...\n";
                 sleep($sleepingTime);
-                if( $likeCount == $maximumLikes) {
-                    echo "Maximum likes reached [ {$maximumLikes} ]\n";
+
+                if ($maximumLikesPerHashtag == $hashTaglikeCounter) {
+                    break;
+                }
+
+                if ($likeCount == $maximumLikes) {
                     break;
                 }
             }
 
-            if( $likeCount == $maximumLikes) {
+            if ($hashTaglikeCounter == $maximumLikesPerHashtag) {
+                echo "Maximum likes reached for #{$hashTag} [ {$maximumLikes} / {$maximumLikesPerHashtag} ]\n";
+                break;
+            }
+
+            if ($likeCount == $maximumLikes) {
                 break;
             }
 
@@ -71,7 +88,8 @@ try {
 
         } while ($maxId !== null);
 
-        if( $likeCount == $maximumLikes) {
+        if ($likeCount == $maximumLikes) {
+            echo "Maximum likes reached [ {$likeCount} / {$maximumLikes} ]\n";
             break;
         }
     }

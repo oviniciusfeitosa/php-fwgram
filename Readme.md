@@ -2,7 +2,10 @@
 
 # php-fwgram
 
-## Goals
+### About
+It is an easy-to-use tool created using PHP and other open-source technologies to provide basic integration actions with the Instagram API.
+
+### Goals
 - [x] Backup instagram Following list(string, json)
 - [x] Backup instagram Followers list(string, json)
 - [x] Like by Hashtag 

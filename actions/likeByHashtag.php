@@ -6,44 +6,68 @@ try {
 
     $hashtagsString = getenv('HASHTAG');
 
-    if(is_null($hashtagsString) || empty($hashtagsString)) {
+    if (is_null($hashtagsString) || empty($hashtagsString)) {
         throw new Exception("You need to define `HASHTAG` in .env file");
     }
 
     $hashTags = explode('|', $hashtagsString);
-    print "\n=== [ {$sleepingTime} Likes - Start! ] ===\n";
+    print "\n=== [ Like By Hashtag [{$username}] - Start! ] ===\n";
 
-    $maximumLikes = getenv('MAXIMUM_LIKES');
-    if(is_null($maximumLikes) || empty($maximumLikes)) {
+    $maximumLikes = (int) getenv('MAXIMUM_LIKES');
+    if (is_null($maximumLikes) || empty($maximumLikes) || $maximumLikes < 1) {
         $maximumLikes = 90;
     }
-    foreach($hashTags as $hashTag) {
+    foreach ($hashTags as $hashTag) {
 
         $rankToken = \InstagramAPI\Signatures::generateUUID();
 
         $maxId = null;
         $likeCount = 0;
-        print "\n=== [ Hashtag: #{$hashtag} ] ===\n";
+        print "\n=== [ Hashtag: #{$hashTag} ] ===\n";
         do {
-            $response = $ig->hashtag->getFeed($hashtag, $rankToken, $maxId);
+            $response = $instagramAPI->hashtag->getFeed($hashTag, $rankToken, $maxId);
+            if($response->isItems()) {
+                $items = $response->getItems();
+            } else {
+                $items = $response->getRankedItems();
+            }
 
-            foreach ($response->getItems() as $item) {
-                $instagramAPI->media->like($item->getMedia()->getId());
+            echo "itens number: " . sizeof($items) . "\n";
+
+            foreach ($items as $item) {
+                $itemId = $item->getId();
+
+                if (is_null($itemId)) {
+                    echo "Without media to like. \n";
+                    continue;
+                }
+
+                $instagramAPI->media->like($itemId);
 //                $instagramAPI->people->get($item->getUser()->getPk());
+
                 $likeCount++;
                 echo "Like number: [ {$likeCount} ]\n";
-                $sleepingTime = rand(1,2);
+
+                $sleepingTime = rand(1, 2);
                 echo "Sleeping for {$sleepingTime}s...\n";
                 sleep($sleepingTime);
+                if( $likeCount == $maximumLikes) {
+                    echo "Maximum likes reached [ {$maximumLikes} ]\n";
+                    break;
+                }
+            }
+
+            if( $likeCount == $maximumLikes) {
+                break;
             }
 
             $maxId = $response->getNextMaxId();
 
-            $sleepingTimeNextPage = rand(2,5);
+            $sleepingTimeNextPage = rand(2, 5);
             echo "Changing to next page -> Sleeping for {$sleepingTimeNextPage}s...\n";
             sleep($sleepingTimeNextPage);
 
-        } while ($maxId !== null || $likeCount !== $maximumLikes);
+        } while ($maxId !== null);
     }
 
     $instagramAPI->logout();

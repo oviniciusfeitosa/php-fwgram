@@ -10,7 +10,7 @@
         "vinnyfs89/x-dump": "dev-master"
     },
     "require": {
-        "mgp25/instagram-php": "^4.1",
+        "mgp25/instagram-php": "dev-master",
         "vlucas/phpdotenv": "^2.4"
     },
     "autoload": {

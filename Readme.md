@@ -5,7 +5,7 @@
 ## Goals
 - [x] Backup instagram Following list(string, json)
 - [x] Backup instagram Followers list(string, json)
-- [ ] Like by Hashtag 
+- [x] Like by Hashtag 
 - [ ] Follow friend 
 - [ ] Follow list of Friends
 - [ ] Follow by Hashtag

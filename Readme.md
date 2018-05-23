@@ -40,7 +40,7 @@ DB_DATABASE="fwgram"
 
 Execute the command bellow.
 ```
-php backupFollowing.php
+php actions/backupFollowing.php
 ```
 
 ### Store User Followers
@@ -49,7 +49,7 @@ php backupFollowing.php
 
 Execute the command bellow.
 ```
-php backupFollowers.php
+php actions/backupFollowers.php
 ```
 
 ## Tecnologies

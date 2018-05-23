@@ -1,13 +1,19 @@
 <?php
 
-require 'config.php';
-
-$userNameSearched = getenv('USERNAME_SEARCHED');
-$info = $instagramAPI->people->getInfoByName($userNameSearched);
-file_put_contents("data/{$userNameSearched}_infos.json", json_encode($info));
-file_put_contents("data/{$userNameSearched}_infos.txt", print_r($info, true));
-
 try {
+
+    require 'config.php';
+
+    $userNameSearched = getenv('USERNAME_SEARCHED');
+
+    if(is_null($userNameSearched) || empty($userNameSearched)) {
+        throw new Exception("You need to define `USERNAME_SEARCHED` in .env file");
+    }
+
+    $info = $instagramAPI->people->getInfoByName($userNameSearched);
+    file_put_contents("data/{$userNameSearched}_infos.json", json_encode($info));
+    file_put_contents("data/{$userNameSearched}_infos.txt", print_r($info, true));
+
     $followers = [
         'users' => [],
         'count' => 0

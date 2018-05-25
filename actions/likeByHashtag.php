@@ -109,6 +109,16 @@ try {
 
     print "\n=== [ {$likeCount}/{$maximumLikes} Likes for Hashtags: {$hashTags} - Complete! ] ===\n";
 
+    $showLikedUsers = (bool)getenv('SHOW_LIKED_USERS');
+    if (is_null($oneLikePerUser)) {
+        throw new Exception("You need to define `SHOW_LIKED_USERS` in .env file");
+    }
+    if($showLikedUsers === true) {
+        print "\n=== [ Users Liked - Start] ===\n";
+        print_r($likedUsers);
+        print "\n=== [ Users Liked - End] ===\n";
+    }
+
 } catch (\Exception $e) {
     echo "Something went wrong: {$e->getMessage()}\n";
 }

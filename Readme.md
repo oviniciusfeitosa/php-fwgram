@@ -9,6 +9,7 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
 - [x] Like by Hashtag 
 - [x] Like by Hashtag - Filtering by:
     - [x] One like Per User
+    - [x] Show liked users at end
     - [ ] Gender 
     - [ ] Age - Above 18 years. 
 - [ ] Follow friend 
@@ -39,7 +40,8 @@ You will need to set following environment variables in your ```.env``` file:
 - HASHTAG
 - MAXIMUM_LIKES_PER_HASHTAG
 - MAXIMUM_LIKES
-- ONE_LIKE_PER_USER=true
+- ONE_LIKE_PER_USER
+- SHOW_LIKED_USERS
 
 To perform this action, execute the command bellow.
 ```

@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.com/vinnyfs89/php-fwgram.svg?branch=master)](https://travis-ci.com/vinnyfs89/php-fwgram)
-
 # php-fwgram
 
 ### About
@@ -9,6 +7,10 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
 - [x] Backup instagram Following list(string, json)
 - [x] Backup instagram Followers list(string, json)
 - [x] Like by Hashtag 
+- [x] Like by Hashtag - Filtering by:
+    - [x] One like Per User
+    - [ ] Gender 
+    - [ ] Age - Above 18 years. 
 - [ ] Follow friend 
 - [ ] Follow list of Friends
 - [ ] Follow by Hashtag
@@ -26,31 +28,42 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
 
 3. Setup your ```APP_USERNAME``` and ```APP_PASSWORD```
 
-4. (Optional) If you want, you can store data defining the environments below:
+4. Choose one of actions inside ```actions``` folder and execute using PHP.
+
+You will find some actions below. 
+
+### Action : Like by Hashtags
+
+You will need to set following environment variables in your ```.env``` file:
+- USERNAME_SEARCHED
+- HASHTAG
+- MAXIMUM_LIKES_PER_HASHTAG
+- MAXIMUM_LIKES
+- ONE_LIKE_PER_USER=true
+
+To perform this action, execute the command bellow.
 ```
-DB_DRIVER="mysql"
-DB_HOST="localhost"
-DB_USERNAME="admin"
-DB_PASSWORD="admin"
-DB_DATABASE="fwgram"
+php actions/likeByHashtag.php
 ```
 
-5. (Optional) If you want you can execute the ```docker-compose up -d``` command to have a mysql database running. 
+### Action : Backup User Following
 
-### Store User Following
+You will need to set following environment variables in your ```.env``` file:
+- BACKUP_DATA_FOLDER
+- USERNAME_SEARCHED
 
-- You need to set ```USERNAME_SEARCHED="xxxx"``` in your ```.env``` file.
-
-Execute the command bellow.
+To perform this action, execute the command bellow.
 ```
 php actions/backupFollowing.php
 ```
 
-### Store User Followers
+### Action : Backup User Followers
 
-- You need to set ```USERNAME_SEARCHED="xxxx"``` in your ```.env``` file.
+You will need to set following environment variables in your ```.env``` file:
+- BACKUP_DATA_FOLDER
+- USERNAME_SEARCHED
 
-Execute the command bellow.
+To perform this action, execute the command bellow.
 ```
 php actions/backupFollowers.php
 ```

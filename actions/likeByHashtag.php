@@ -25,12 +25,17 @@ try {
         throw new Exception("You need to define `MAXIMUM_LIKES_PER_HASHTAG` in .env file");
     }
 
+    $oneLikePerUser = (bool)getenv('ONE_LIKE_PER_USER');
+    if (is_null($oneLikePerUser)) {
+        throw new Exception("You need to define `ONE_LIKE_PER_USER` in .env file");
+    }
+
     $likeCount = 0;
+    $likedUsers = [];
+
     foreach ($hashTagsArray as $hashTag) {
         $hashTaglikeCounter = 0;
-
         $rankToken = \InstagramAPI\Signatures::generateUUID();
-
         $maxId = null;
         print "\n=== [ Hashtag: #{$hashTag} ] ===\n";
         do {
@@ -51,8 +56,14 @@ try {
                     continue;
                 }
 
+                $usernameToLike = $item->getUser()->getUsername();
+
+                if($oneLikePerUser === true && in_array($usernameToLike, $likedUsers)) {
+                    echo "Username {$usernameToLike} already had a liked media. \n";
+                    continue;
+                }
                 $instagramAPI->media->like($itemId);
-//                $instagramAPI->people->get($item->getUser()->getPk());
+                array_push($likedUsers, $usernameToLike);
 
                 $hashTaglikeCounter++;
                 $likeCount++;

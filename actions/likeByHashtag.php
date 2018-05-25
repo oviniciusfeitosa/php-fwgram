@@ -25,9 +25,23 @@ try {
         throw new Exception("You need to define `ONE_LIKE_PER_USER` in .env file");
     }
 
+    $isLikeMale = (bool)getenv('LIKE_MALE');
+    if (is_null($isLikeMale)) {
+        throw new Exception("You need to define `LIKE_MALE` in .env file");
+    }
+
+    $isLikeFemale = (bool)getenv('LIKE_FEMALE');
+    if (is_null($isLikeFemale)) {
+        throw new Exception("You need to define `LIKE_FEMALE` in .env file");
+    }
+
+    $showLikedUsers = (bool)getenv('SHOW_LIKED_USERS');
     if (is_null($oneLikePerUser)) {
         throw new Exception("You need to define `SHOW_LIKED_USERS` in .env file");
     }
+
+    define('GENDER_MALE', (int)1);
+    define('GENDER_FEMALE', (int)0);
 
     $hashTagsArray = explode('|', $hashtagsConcatened);
     $hashTags = "#" . implode(' #', $hashTagsArray);
@@ -50,32 +64,43 @@ try {
                 $items = $response->getRankedItems();
             }
 
-            echo "itens number: " . sizeof($items) . "\n";
+            echo "=> Media numbers: " . sizeof($items) . "\n";
 
             foreach ($items as $item) {
-                $itemId = $item->getId();
 
+                $itemId = $item->getId();
                 if (is_null($itemId)) {
-                    echo "Without media to like. \n";
+                    echo "** Without media to like. **\n";
                     continue;
                 }
 
-                $usernameToLike = $item->getUser()->getUsername();
+                $mediaUsernameToLike = $item->getUser()->getUsername();
+                if ($oneLikePerUser === true && in_array($mediaUsernameToLike, $likedUsers)) {
+                    echo "** Username [{$mediaUsernameToLike}] already had a liked media. **\n";
+                    continue;
+                }
 
-                if($oneLikePerUser === true && in_array($usernameToLike, $likedUsers)) {
-                    echo "Username {$usernameToLike} already had a liked media. \n";
+                $mediaUserGender = $item->getUser()->getGender();
+                if (
+                    !is_null($mediaUserGender)
+                    and
+                    ($isLikeMale === true && $mediaUserGender !== GENDER_MALE)
+                    and
+                    ($isLikeFemale === true && $mediaUserGender !== GENDER_FEMALE)
+                ) {
+                    echo "** Gender does not mismatch for user [{$mediaUsernameToLike}]. **\n";
                     continue;
                 }
 
                 $instagramAPI->media->like($itemId);
-                array_push($likedUsers, $usernameToLike);
+                array_push($likedUsers, $mediaUsernameToLike);
 
                 $hashTaglikeCounter++;
                 $likeCount++;
-                echo "Like number: [ {$likeCount} ]\n";
+                echo "=> Like number: [ {$likeCount} ]\n";
 
                 $sleepingTime = rand(1, 2);
-                echo "Sleeping for {$sleepingTime}s...\n";
+                echo "=> Sleeping for {$sleepingTime}s...\n";
                 sleep($sleepingTime);
 
                 if ($maximumLikesPerHashtag == $hashTaglikeCounter) {
@@ -114,9 +139,7 @@ try {
 
     print "\n=== [ {$likeCount}/{$maximumLikes} Likes for Hashtags: {$hashTags} - Complete! ] ===\n";
 
-    $showLikedUsers = (bool)getenv('SHOW_LIKED_USERS');
-
-    if($showLikedUsers === true) {
+    if ($showLikedUsers === true) {
         print "\n=== [ Users Liked - Start] ===\n";
         print_r($likedUsers);
         print "\n=== [ Users Liked - End] ===\n";

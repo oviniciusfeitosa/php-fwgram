@@ -11,10 +11,9 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
     - [x] One like Per User
     - [x] Show liked users at end
     - [x] Gender 
-    - [ ] Age - Above 18 years. 
+- [ ] Follow by Hashtag
 - [ ] Follow friend 
 - [ ] Follow list of Friends
-- [ ] Follow by Hashtag
 - [ ] Unfollow Massively
 - [ ] Add Tests
 

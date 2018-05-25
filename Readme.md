@@ -7,10 +7,10 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
 - [x] Backup instagram Following list(string, json)
 - [x] Backup instagram Followers list(string, json)
 - [x] Like by Hashtag 
-- [x] Like by Hashtag - Filtering by:
-    - [x] One like Per User
-    - [x] Show liked users at end
-    - [x] Gender 
+    - [x] Filtering by:
+        - [x] One like Per User
+        - [x] Show liked users at end
+        - [x] Gender 
 - [ ] Follow :
     - [ ] Create a JSON file with a list of Followed Users if doesn't exists.
     - [ ] Filters: 

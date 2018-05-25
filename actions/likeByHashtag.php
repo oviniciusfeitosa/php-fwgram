@@ -10,11 +10,6 @@ try {
         throw new Exception("You need to define `HASHTAG` in .env file");
     }
 
-    $hashTagsArray = explode('|', $hashtagsConcatened);
-    $hashTags = "#" . implode(' #', $hashTagsArray);
-
-    print "\n=== [ Like By Hashtag [user: {$username} | Hashtags: {$hashTags}] - Start! ] ===\n";
-
     $maximumLikes = (int)getenv('MAXIMUM_LIKES');
     if (is_null($maximumLikes) || empty($maximumLikes) || $maximumLikes < 1) {
         throw new Exception("You need to define `MAXIMUM_LIKES` in .env file");
@@ -29,6 +24,15 @@ try {
     if (is_null($oneLikePerUser)) {
         throw new Exception("You need to define `ONE_LIKE_PER_USER` in .env file");
     }
+
+    if (is_null($oneLikePerUser)) {
+        throw new Exception("You need to define `SHOW_LIKED_USERS` in .env file");
+    }
+
+    $hashTagsArray = explode('|', $hashtagsConcatened);
+    $hashTags = "#" . implode(' #', $hashTagsArray);
+
+    print "\n=== [ Like By Hashtag [user: {$username} | Hashtags: {$hashTags}] - Start! ] ===\n";
 
     $likeCount = 0;
     $likedUsers = [];
@@ -62,6 +66,7 @@ try {
                     echo "Username {$usernameToLike} already had a liked media. \n";
                     continue;
                 }
+
                 $instagramAPI->media->like($itemId);
                 array_push($likedUsers, $usernameToLike);
 
@@ -83,7 +88,7 @@ try {
             }
 
             if ($hashTaglikeCounter == $maximumLikesPerHashtag) {
-                echo "Maximum likes reached for #{$hashTag} [ {$hashTaglikeCounter} / {$maximumLikesPerHashtag} ]\n";
+                echo "** Maximum likes reached for #{$hashTag} [ {$hashTaglikeCounter} / {$maximumLikesPerHashtag} ] **\n";
                 break;
             }
 
@@ -94,13 +99,13 @@ try {
             $maxId = $response->getNextMaxId();
 
             $sleepingTimeNextPage = rand(2, 5);
-            echo "Changing to next page -> Sleeping for {$sleepingTimeNextPage}s...\n";
+            echo "** Changing to next page -> Sleeping for {$sleepingTimeNextPage}s... **\n";
             sleep($sleepingTimeNextPage);
 
         } while ($maxId !== null);
 
         if ($likeCount == $maximumLikes) {
-            echo "Maximum likes reached [ {$likeCount} / {$maximumLikes} ]\n";
+            echo "** Maximum likes reached [ {$likeCount} / {$maximumLikes} ] **\n";
             break;
         }
     }
@@ -110,9 +115,7 @@ try {
     print "\n=== [ {$likeCount}/{$maximumLikes} Likes for Hashtags: {$hashTags} - Complete! ] ===\n";
 
     $showLikedUsers = (bool)getenv('SHOW_LIKED_USERS');
-    if (is_null($oneLikePerUser)) {
-        throw new Exception("You need to define `SHOW_LIKED_USERS` in .env file");
-    }
+
     if($showLikedUsers === true) {
         print "\n=== [ Users Liked - Start] ===\n";
         print_r($likedUsers);

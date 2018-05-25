@@ -11,10 +11,19 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
     - [x] One like Per User
     - [x] Show liked users at end
     - [x] Gender 
-- [ ] Follow by Hashtag
-- [ ] Follow friend 
-- [ ] Follow list of Friends
-- [ ] Unfollow Massively
+- [ ] Follow :
+    - [ ] Create a JSON file with a list of Followed Users if doesn't exists.
+    - [ ] Filters: 
+        - [ ] By User 
+        - [ ] By List of Users 
+        - [ ] By Hashtag
+- [ ] Unfollow :
+    - [ ] Filters: 
+        - [ ] By User 
+        - [ ] By List of Users 
+        - [ ] By JSON file with a list of Followed Users
+        - [ ] By Hashtag
+    - [ ] Massively (All Users)
 - [ ] Add Tests
 
 ### Steps

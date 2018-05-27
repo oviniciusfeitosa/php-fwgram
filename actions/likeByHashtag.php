@@ -99,7 +99,7 @@ try {
                 $likeCount++;
                 echo "=> Like number: [ {$likeCount} ]\n";
 
-                $sleepingTime = rand(1, 2);
+                $sleepingTime = rand(4, 7);
                 echo "=> Sleeping for {$sleepingTime}s...\n";
                 sleep($sleepingTime);
 
@@ -123,7 +123,7 @@ try {
 
             $maxId = $response->getNextMaxId();
 
-            $sleepingTimeNextPage = rand(2, 5);
+            $sleepingTimeNextPage = rand(4, 8);
             echo "** Changing to next page -> Sleeping for {$sleepingTimeNextPage}s... **\n";
             sleep($sleepingTimeNextPage);
 

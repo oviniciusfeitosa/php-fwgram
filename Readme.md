@@ -12,11 +12,12 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
         - [x] Show liked users at end
         - [x] Gender 
 - [ ] Follow :
-    - [ ] Create a JSON file with a list of Followed Users if doesn't exists.
-    - [ ] Filters: 
-        - [ ] By User 
-        - [ ] By List of Users 
-        - [ ] By Hashtag
+    - [x] Create a JSON file with a list of Followed Users if doesn't exists.
+    - [x] Filters: 
+        - [x] By User 
+        - [x] By List of Users 
+        - [x] By Hashtag
+        - [ ] Check if user follows me
 - [ ] Unfollow :
     - [ ] Filters: 
         - [ ] By User 

@@ -41,6 +41,10 @@ try {
     $hashTagsArray = explode('|', $hashtagsConcatened);
     $hashTags = "#" . implode(' #', $hashTagsArray);
 
+    print "\n*** [ INFO ] ***\n";
+    print "\n*** [ Maximum Followed: {$maximumfollowed} ] ***\n";
+    print "\n*** [ Maximum Followed Per Hashtag: {$maximumfollowedPerHashtag} ] ***\n";
+    print "\n*** [ / INFO ] ***\n";
     print "\n=== [ Follow By Hashtag [user: {$username} | Hashtags: {$hashTags}] - Start! ] ===\n";
 
     $followCount = 0;

@@ -40,6 +40,14 @@ try {
         throw new Exception("You need to define `SHOW_LIKED_USERS` in .env file");
     }
 
+    $likedMediaPath = "{$backupDataFolder}/{$username}_liked_media.json";
+    if (!is_file($likedMediaPath)) {
+        file_put_contents($likedMediaPath, json_encode([]));
+    }
+
+    $likedMediaJson = file_get_contents($likedMediaPath);
+    $likedMedia = json_decode($likedMediaJson, true);
+
     define('GENDER_MALE', (int)1);
     define('GENDER_FEMALE', (int)0);
 
@@ -68,8 +76,8 @@ try {
 
             foreach ($items as $item) {
 
-                $itemId = $item->getId();
-                if (is_null($itemId)) {
+                $mediaId = $item->getId();
+                if (is_null($mediaId)) {
                     echo "** Without media to like. **\n";
                     continue;
                 }
@@ -92,8 +100,14 @@ try {
                     continue;
                 }
 
-                $instagramAPI->media->like($itemId);
-                array_push($likedUsers, $mediaUsernameToLike);
+                if(in_array($mediaId, $likedMedia)) {
+                    echo "** Already Liked Media **\n";
+                    continue;
+                }
+
+                $instagramAPI->media->like($mediaId);
+                $likedUsers[] = $mediaUsernameToLike;
+                $likedMedia[] = $mediaId;
 
                 $hashTaglikeCounter++;
                 $likeCount++;
@@ -149,3 +163,4 @@ try {
     echo "Something went wrong: {$e->getMessage()}\n";
 }
 
+file_put_contents($likedMediaPath, json_encode($likedMedia));

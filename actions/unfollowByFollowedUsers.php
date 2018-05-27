@@ -29,7 +29,7 @@ try {
         print "\n*** [ Unfollow - User: @{$followedUser} ] ***\n";
         $info = $instagramAPI->people->getInfoByName($followedUser);
         $instagramAPI->people->unfollow($info->getUser()->getPk());
-        $sleepingTimeNextPage = rand(2, 5);
+        $sleepingTimeNextPage = rand(5, 7);
 
         echo "** Moving to next user -> Sleeping for {$sleepingTimeNextPage}s... **\n";
         sleep($sleepingTimeNextPage);

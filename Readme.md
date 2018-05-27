@@ -6,8 +6,6 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
 **Attention use this tool at your own risk.**
 
 ### Goals
-- [x] Backup instagram Following list(string, json)
-- [x] Backup instagram Followers list(string, json)
 - [x] Like by Hashtag 
     - [x] Filtering by:
         - [x] One like Per User
@@ -25,6 +23,10 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
         - [x] By JSON file with a followed Users
         - [x] By JSON file with a following backup list
         - [ ] Massively (All Users)
+- [x] Tools
+    - [x] Backup instagram Following list(string, json)
+    - [x] Backup instagram Followers list(string, json)
+    - [x] Get Followed Diff By JSON Backup Following
 - [ ] Comments :
     - @todo: Fill here
 - [ ] Add Tests

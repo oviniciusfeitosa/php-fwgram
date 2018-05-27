@@ -34,6 +34,8 @@ try {
     $rankToken = \InstagramAPI\Signatures::generateUUID();
     $searchQuery = null;
 
+    $followedUsers = [];
+
     do {
         $response = $instagramAPI->people->getFollowing(
             $info->getUser()->getPk(),
@@ -45,18 +47,16 @@ try {
         foreach ($apiUsers as $key => $userModel) {
 
             if(!in_array($userModel->getUsername(), $usersFollowingBackup)) {
-                print "\n*** [ Unfollow - User: @{$followingUser} ] ***\n";
-                $instagramAPI->people->unfollow($userModel->getPk());
+                print "\n*** [ Found Followed User @{$userModel->getUsername()} - By Diff ] ***\n";
+                $followedUsers[] = $userModel->getUsername();
 
-                $sleepingTimeNextPage = rand(7, 9);
+                $sleepingTimeNextPage = rand(5, 7);
 
-                echo "** Moving to next user -> Sleeping for {$sleepingTimeNextPage}s... **\n";
-                sleep($sleepingTimeNextPage);
             }
-
-
         }
-        $maxId = $following['nextMaxId'];
+        echo "** Moving to next user -> Sleeping for {$sleepingTimeNextPage}s... **\n";
+        sleep($sleepingTimeNextPage);
+        $maxId = $response->getNextMaxId();
     } while ($maxId !== null);
 
     $instagramAPI->logout();
@@ -65,4 +65,5 @@ try {
 } catch (\Exception $e) {
     echo "Something went wrong: {$e->getMessage()}\n";
 }
+file_put_contents("{$backupDataFolder}/{$username}_followed.json", json_encode($followedUsers));
 

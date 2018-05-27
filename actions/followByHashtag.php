@@ -10,24 +10,44 @@ try {
         throw new Exception("You need to define `HASHTAG` in .env file");
     }
 
-    $showLikedUsers = (bool)getenv('SHOW_LIKED_USERS');
-    if (is_null($oneLikePerUser)) {
-        throw new Exception("You need to define `SHOW_LIKED_USERS` in .env file");
+    $maximumfollowed = (int)getenv('MAXIMUM_FOLLOWED');
+    if (is_null($maximumfollowed) || empty($maximumfollowed) || $maximumfollowed < 1) {
+        throw new Exception("You need to define `MAXIMUM_FOLLOWED` in .env file");
     }
 
-    define('GENDER_MALE', (int)1);
-    define('GENDER_FEMALE', (int)0);
+    $maximumfollowedPerHashtag = (int)getenv('MAXIMUM_FOLLOWED_PER_HASHTAG');
+    if (is_null($maximumfollowedPerHashtag) || empty($maximumfollowedPerHashtag) || $maximumfollowedPerHashtag < 1) {
+        throw new Exception("You need to define `MAXIMUM_FOLLOWED_PER_HASHTAG` in .env file");
+    }
+
+    $showFollowdUsers = (bool)getenv('SHOW_FOLLOWED_USERS');
+    if (is_null($showFollowdUsers)) {
+        throw new Exception("You need to define `SHOW_FOLLOWED_USERS` in .env file");
+    }
+
+    $backupDataFolder = getenv('BACKUP_DATA_FOLDER');
+    if(is_null($backupDataFolder) || empty($backupDataFolder)) {
+        throw new Exception("You need to define `BACKUP_DATA_FOLDER` in .env file");
+    }
+
+    $userFollowedFilePath = "{$backupDataFolder}/{$username}_followed.json";
+    if (!is_file($userFollowedFilePath)) {
+        file_put_contents($userFollowedFilePath, json_encode([]));
+    }
+
+    $userFollowedJson = file_get_contents($userFollowedFilePath);
+    $followedUsers = json_decode($userFollowedJson, true);
 
     $hashTagsArray = explode('|', $hashtagsConcatened);
     $hashTags = "#" . implode(' #', $hashTagsArray);
 
-    print "\n=== [ Like By Hashtag [user: {$username} | Hashtags: {$hashTags}] - Start! ] ===\n";
+    print "\n=== [ Follow By Hashtag [user: {$username} | Hashtags: {$hashTags}] - Start! ] ===\n";
 
-    $likeCount = 0;
-    $likedUsers = [];
+    $followCount = 0;
+    $followedUsers = [];
 
     foreach ($hashTagsArray as $hashTag) {
-        $hashTaglikeCounter = 0;
+        $hashTagUserFollowedCounter = 0;
         $rankToken = \InstagramAPI\Signatures::generateUUID();
         $maxId = null;
         print "\n=== [ Hashtag: #{$hashTag} ] ===\n";
@@ -45,79 +65,70 @@ try {
 
                 $itemId = $item->getId();
                 if (is_null($itemId)) {
-                    echo "** Without media to like. **\n";
+                    echo "** Without media to follow user. **\n";
                     continue;
                 }
 
-                $mediaUsernameToLike = $item->getUser()->getUsername();
-                if ($oneLikePerUser === true && in_array($mediaUsernameToLike, $likedUsers)) {
-                    echo "** Username [{$mediaUsernameToLike}] already had a liked media. **\n";
+                $user = $item->getUser();
+                $mediaUsernameToFollow = $user->getUsername();
+
+                if (in_array($mediaUsernameToFollow, $followedUsers)) {
+                    echo "** Username [{$mediaUsernameToFollow}] already was followed. **\n";
                     continue;
                 }
+                $instagramAPI->people->follow($user->getPk());
+                array_push($followedUsers, $mediaUsernameToFollow);
 
-                $mediaUserGender = $item->getUser()->getGender();
-                if (
-                    !is_null($mediaUserGender)
-                    and
-                    ($isLikeMale === true && $mediaUserGender !== GENDER_MALE)
-                    and
-                    ($isLikeFemale === true && $mediaUserGender !== GENDER_FEMALE)
-                ) {
-                    echo "** Gender does not mismatch for user [{$mediaUsernameToLike}]. **\n";
-                    continue;
-                }
-
-                $instagramAPI->media->like($itemId);
-                array_push($likedUsers, $mediaUsernameToLike);
-
-                $hashTaglikeCounter++;
-                $likeCount++;
-                echo "=> Like number: [ {$likeCount} ]\n";
+                $hashTagUserFollowedCounter++;
+                $followCount++;
+                echo "=> Follow number: [ {$followCount} ]\n";
 
                 $sleepingTime = rand(1, 2);
                 echo "=> Sleeping for {$sleepingTime}s...\n";
                 sleep($sleepingTime);
 
-                if ($maximumLikesPerHashtag == $hashTaglikeCounter) {
+                if ($maximumfollowedPerHashtag == $hashTagUserFollowedCounter) {
                     break;
                 }
 
-                if ($likeCount == $maximumLikes) {
+                if ($followCount == $maximumfollowed) {
                     break;
                 }
             }
 
-            if ($hashTaglikeCounter == $maximumLikesPerHashtag) {
-                echo "** Maximum likes reached for #{$hashTag} [ {$hashTaglikeCounter} / {$maximumLikesPerHashtag} ] **\n";
+            if ($hashTagUserFollowedCounter == $maximumfollowedPerHashtag) {
+                echo "** Maximum followed reached for #{$hashTag} [ {$hashTagUserFollowedCounter} / {$maximumfollowedPerHashtag} ] **\n";
                 break;
             }
 
-            if ($likeCount == $maximumLikes) {
+            if ($followCount == $maximumfollowed) {
                 break;
             }
 
             $maxId = $response->getNextMaxId();
 
-            $sleepingTimeNextPage = rand(2, 5);
+            $sleepingTimeNextPage = rand(4, 9);
             echo "** Changing to next page -> Sleeping for {$sleepingTimeNextPage}s... **\n";
             sleep($sleepingTimeNextPage);
 
         } while ($maxId !== null);
 
-        if ($likeCount == $maximumLikes) {
-            echo "** Maximum likes reached [ {$likeCount} / {$maximumLikes} ] **\n";
+        if ($followCount == $maximumfollowed) {
+            echo "** Maximum followed reached [ {$followCount} / {$maximumfollowed} ] **\n";
             break;
         }
     }
 
     $instagramAPI->logout();
 
-    print "\n=== [ {$likeCount}/{$maximumLikes} Likes for Hashtags: {$hashTags} - Complete! ] ===\n";
+    file_put_contents($userFollowedFilePath, json_encode([$followedUsers]));
 
-    if ($showLikedUsers === true) {
-        print "\n=== [ Users Liked - Start] ===\n";
-        print_r($likedUsers);
-        print "\n=== [ Users Liked - End] ===\n";
+    print "\n=== [ {$followCount}/{$maximumfollowed} followed for Hashtags: {$hashTags} - Complete! ] ===\n";
+
+    if ($showFollowdUsers === true) {
+        print "\n=== [ Users Followd - Start] ===\n";
+        print_r($followedUsers);
+        print "\n=== [ Users Followd - End] ===\n";
     }
 
 } catch (\Exception $e) {

@@ -3,6 +3,8 @@
 ### About
 It is an easy-to-use tool created using PHP and other open-source technologies to provide basic integration actions with the Instagram API.
 
+**Attention use this tool at your own risk.**
+
 ### Goals
 - [x] Backup instagram Following list(string, json)
 - [x] Backup instagram Followers list(string, json)
@@ -18,13 +20,10 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
         - [x] By List of Users 
         - [x] By Hashtag
         - [ ] Check if user follows me
-- [ ] Unfollow :
-    - [ ] Filters: 
-        - [ ] By User 
-        - [ ] By List of Users 
-        - [ ] By JSON file with a list of Followed Users
-        - [ ] By Hashtag
-    - [ ] Massively (All Users)
+- [x] Unfollow :
+    - [x] Filters:  
+        - [x] By JSON file with a list of Followed Users
+        - [ ] Massively (All Users)
 - [ ] Comments :
     - @todo: Fill here
 - [ ] Add Tests

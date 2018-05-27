@@ -23,6 +23,7 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
 - [x] Unfollow :
     - [x] Filters:  
         - [x] By JSON file with a list of Followed Users
+        - [ ] By JSON file with a following backup list
         - [ ] Massively (All Users)
 - [ ] Comments :
     - @todo: Fill here
@@ -48,16 +49,46 @@ You will find some actions below.
 You will need to set following environment variables in your ```.env``` file:
 - USERNAME_SEARCHED
 - HASHTAG
+- BACKUP_DATA_FOLDER
 - MAXIMUM_LIKES_PER_HASHTAG
 - MAXIMUM_LIKES
 - ONE_LIKE_PER_USER
-- LIKE_MALE=true
-- LIKE_FEMALE=true
+- LIKE_MALE
+- LIKE_FEMALE
 - SHOW_LIKED_USERS
 
 To perform this action, execute the command bellow.
 ```
 php actions/likeByHashtag.php
+```
+
+### Action : Follow by Hashtags
+
+You will need to set following environment variables in your ```.env``` file:
+- USERNAME_SEARCHED
+- HASHTAG
+- BACKUP_DATA_FOLDER
+- MAXIMUM_FOLLOWED_PER_HASHTAG
+- MAXIMUM_FOLLOWED
+- SHOW_FOLLOWED_USERS
+
+To perform this action, execute the command bellow.
+```
+php actions/followByHashtag.php
+```
+
+### Action : Unfollow 
+
+You will need to set following environment variables in your ```.env``` file:
+- USERNAME_SEARCHED
+- HASHTAG
+- BACKUP_DATA_FOLDER
+- MAXIMUM_FOLLOWED
+- SHOW_FOLLOWED_USERS
+
+To perform this action, execute the command bellow.
+```
+php actions/unfollowByJsonFile.php
 ```
 
 ### Action : Backup User Following

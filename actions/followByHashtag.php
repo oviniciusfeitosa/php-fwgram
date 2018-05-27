@@ -124,7 +124,6 @@ try {
 
     $instagramAPI->logout();
 
-    file_put_contents($userFollowedFilePath, json_encode($followedUsers));
 
     print "\n=== [ {$followCount}/{$maximumfollowed} followed for Hashtags: {$hashTags} - Complete! ] ===\n";
 
@@ -138,3 +137,4 @@ try {
     echo "Something went wrong: {$e->getMessage()}\n";
 }
 
+file_put_contents($userFollowedFilePath, json_encode($followedUsers));

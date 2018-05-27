@@ -23,7 +23,7 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
 - [x] Unfollow :
     - [x] Filters:  
         - [x] By JSON file with a list of Followed Users
-        - [ ] By JSON file with a following backup list
+        - [x] By JSON file with a following backup list
         - [ ] Massively (All Users)
 - [ ] Comments :
     - @todo: Fill here
@@ -89,6 +89,11 @@ You will need to set following environment variables in your ```.env``` file:
 To perform this action, execute the command bellow.
 ```
 php actions/unfollowByJsonFile.php
+```
+
+or 
+```
+php unfollowByFollowingBackup.php
 ```
 
 ### Action : Backup User Following

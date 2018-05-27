@@ -44,7 +44,6 @@ try {
     print "\n=== [ Follow By Hashtag [user: {$username} | Hashtags: {$hashTags}] - Start! ] ===\n";
 
     $followCount = 0;
-    $followedUsers = [];
 
     foreach ($hashTagsArray as $hashTag) {
         $hashTagUserFollowedCounter = 0;
@@ -77,13 +76,13 @@ try {
                     continue;
                 }
                 $instagramAPI->people->follow($user->getPk());
-                array_push($followedUsers, $mediaUsernameToFollow);
+                $followedUsers[] = $mediaUsernameToFollow;
 
                 $hashTagUserFollowedCounter++;
                 $followCount++;
                 echo "=> Follow number: [ {$followCount} ]\n";
 
-                $sleepingTime = rand(1, 2);
+                $sleepingTime = rand(4, 6);
                 echo "=> Sleeping for {$sleepingTime}s...\n";
                 sleep($sleepingTime);
 
@@ -107,7 +106,7 @@ try {
 
             $maxId = $response->getNextMaxId();
 
-            $sleepingTimeNextPage = rand(4, 9);
+            $sleepingTimeNextPage = rand(2, 5);
             echo "** Changing to next page -> Sleeping for {$sleepingTimeNextPage}s... **\n";
             sleep($sleepingTimeNextPage);
 
@@ -121,14 +120,14 @@ try {
 
     $instagramAPI->logout();
 
-    file_put_contents($userFollowedFilePath, json_encode([$followedUsers]));
+    file_put_contents($userFollowedFilePath, json_encode($followedUsers));
 
     print "\n=== [ {$followCount}/{$maximumfollowed} followed for Hashtags: {$hashTags} - Complete! ] ===\n";
 
     if ($showFollowdUsers === true) {
-        print "\n=== [ Users Followd - Start] ===\n";
+        print "\n=== [ Users Followed - Start] ===\n";
         print_r($followedUsers);
-        print "\n=== [ Users Followd - End] ===\n";
+        print "\n=== [ Users Followed - End] ===\n";
     }
 
 } catch (\Exception $e) {

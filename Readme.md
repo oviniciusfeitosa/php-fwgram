@@ -22,7 +22,7 @@ It is an easy-to-use tool created using PHP and other open-source technologies t
         - [ ] Check if user follows me
 - [x] Unfollow :
     - [x] Filters:  
-        - [x] By JSON file with a list of Followed Users
+        - [x] By JSON file with a followed Users
         - [x] By JSON file with a following backup list
         - [ ] Massively (All Users)
 - [ ] Comments :
@@ -88,7 +88,7 @@ You will need to set following environment variables in your ```.env``` file:
 
 To perform this action, execute the command bellow.
 ```
-php actions/unfollowByJsonFile.php
+php actions/unfollowByFollowedUsers.php
 ```
 
 or 

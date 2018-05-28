@@ -86,7 +86,7 @@ try {
                 $followCount++;
                 echo "=> Follow number: [ {$followCount} ]\n";
 
-                $sleepingTime = rand(4, 6);
+                $sleepingTime = rand(7, 10);
                 echo "=> Sleeping for {$sleepingTime}s...\n";
                 sleep($sleepingTime);
 
@@ -110,7 +110,7 @@ try {
 
             $maxId = $response->getNextMaxId();
 
-            $sleepingTimeNextPage = rand(2, 5);
+            $sleepingTimeNextPage = rand(8, 10);
             echo "** Changing to next page -> Sleeping for {$sleepingTimeNextPage}s... **\n";
             sleep($sleepingTimeNextPage);
 

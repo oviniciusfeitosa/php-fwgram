@@ -30,6 +30,11 @@ try {
         throw new Exception("You need to define `LIKE_MALE` in .env file");
     }
 
+    $backupDataFolder = getenv('BACKUP_DATA_FOLDER');
+    if (is_null($backupDataFolder) || empty($backupDataFolder)) {
+        throw new Exception("You need to define `BACKUP_DATA_FOLDER` in .env file");
+    }
+
     $isLikeFemale = (bool)getenv('LIKE_FEMALE');
     if (is_null($isLikeFemale)) {
         throw new Exception("You need to define `LIKE_FEMALE` in .env file");
@@ -65,6 +70,7 @@ try {
         $maxId = null;
         print "\n=== [ Hashtag: #{$hashTag} ] ===\n";
         do {
+
             $response = $instagramAPI->hashtag->getFeed($hashTag, $rankToken, $maxId);
             if ($response->isItems()) {
                 $items = $response->getItems();
@@ -76,53 +82,62 @@ try {
 
             foreach ($items as $item) {
 
-                $mediaId = $item->getId();
-                if (is_null($mediaId)) {
-                    echo "** Without media to like. **\n";
-                    continue;
-                }
+                try {
+                    $mediaId = $item->getId();
+                    if (is_null($mediaId)) {
+                        echo "** Without media to like. **\n";
+                        continue;
+                    }
 
-                $mediaUsernameToLike = $item->getUser()->getUsername();
-                if ($oneLikePerUser === true && in_array($mediaUsernameToLike, $likedUsers)) {
-                    echo "** Username [{$mediaUsernameToLike}] already had a liked media. **\n";
-                    continue;
-                }
+                    $mediaUsernameToLike = $item->getUser()->getUsername();
+                    if ($oneLikePerUser === true && in_array($mediaUsernameToLike, $likedUsers)) {
+                        echo "** Username [{$mediaUsernameToLike}] already had a liked media. **\n";
+                        continue;
+                    }
 
-                $mediaUserGender = $item->getUser()->getGender();
-                if (
-                    !is_null($mediaUserGender)
-                    and
-                    ($isLikeMale === true && $mediaUserGender !== GENDER_MALE)
-                    and
-                    ($isLikeFemale === true && $mediaUserGender !== GENDER_FEMALE)
-                ) {
-                    echo "** Gender does not mismatch for user [{$mediaUsernameToLike}]. **\n";
-                    continue;
-                }
+                    $mediaUserGender = $item->getUser()->getGender();
+                    if (
+                        !is_null($mediaUserGender)
+                        and
+                        ($isLikeMale === true && $mediaUserGender !== GENDER_MALE)
+                        and
+                        ($isLikeFemale === true && $mediaUserGender !== GENDER_FEMALE)
+                    ) {
+                        echo "** Gender does not mismatch for user [{$mediaUsernameToLike}]. **\n";
+                        continue;
+                    }
 
-                if(in_array($mediaId, $likedMedia)) {
-                    echo "** Already Liked Media **\n";
-                    continue;
-                }
+                    if (in_array($mediaId, $likedMedia)) {
+                        echo "** Already Liked Media **\n";
+                        continue;
+                    }
 
-                $instagramAPI->media->like($mediaId);
-                $likedUsers[] = $mediaUsernameToLike;
-                $likedMedia[] = $mediaId;
+                    $instagramAPI->media->like($mediaId);
+                    $likedUsers[] = $mediaUsernameToLike;
+                    $likedMedia[] = $mediaId;
 
-                $hashTaglikeCounter++;
-                $likeCount++;
-                echo "=> Like number: [ {$likeCount} ]\n";
+                    $hashTaglikeCounter++;
+                    $likeCount++;
+                    echo "=> Like number: [ {$likeCount} ]\n";
 
-                $sleepingTime = rand(4, 7);
-                echo "=> Sleeping for {$sleepingTime}s...\n";
-                sleep($sleepingTime);
+                    $sleepingTime = rand(7, 10);
+                    echo "=> Sleeping for {$sleepingTime}s...\n";
+                    sleep($sleepingTime);
 
-                if ($maximumLikesPerHashtag == $hashTaglikeCounter) {
-                    break;
-                }
+                    if ($maximumLikesPerHashtag == $hashTaglikeCounter) {
+                        break;
+                    }
 
-                if ($likeCount == $maximumLikes) {
-                    break;
+                    if ($likeCount == $maximumLikes) {
+                        break;
+                    }
+                } catch (\Exception $e) {
+                    if ($e->getMessage() == 'Sorry, you cannot like this media.') {
+                        echo "** > {$e->getMessage()}\n **";
+                        continue;
+                    } else {
+                        throw $e;
+                    }
                 }
             }
 
@@ -137,7 +152,7 @@ try {
 
             $maxId = $response->getNextMaxId();
 
-            $sleepingTimeNextPage = rand(4, 8);
+            $sleepingTimeNextPage = rand(8, 10);
             echo "** Changing to next page -> Sleeping for {$sleepingTimeNextPage}s... **\n";
             sleep($sleepingTimeNextPage);
 
